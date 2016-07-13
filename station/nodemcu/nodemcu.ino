@@ -3,11 +3,11 @@
 
 const char* SSID = "ssid";
 const char* PASSWORD = "password";
-const String SERVER_ADDRESS = "api.sensorweb.io";
+const String SERVER_ADDRESS = "maker.ifttt.com";
 const String SERVER_PORT = "80";
-const String SENSOR_ID = "sensorId";
-const String API_KEY = "apiKey";
-const String REST_API = "http://" + SERVER_ADDRESS + ":" + SERVER_PORT + "/sensors/" + SENSOR_ID + "/data";
+const String SENSOR_ID = "myUniqueSensorName";
+const String API_KEY = "myIFTTTMakerChannelKey";
+const String REST_API = "http://" + SERVER_ADDRESS + ":" + SERVER_PORT + "/trigger/sensorweb/with/key/" + API_KEY;
 
 unsigned int pm10 = 0;
 unsigned int pm25 = 0;
@@ -69,9 +69,8 @@ void loop() {
   Serial.println(" }");
 
   http.begin(REST_API);
-  http.addHeader("Content-Type", "application/x-www-form-urlencoded");
-  http.POST("pm25=" + String(pm25) + "&apiKey=" + API_KEY);
-  http.writeToStream(&Serial);
+  http.addHeader("Content-Type", "application/json");
+  http.POST("{\"value1\": \"" + SENSOR_ID + "\", \"value2\": \"pm25\", \"value3\": \"" + String(pm25) + "\"}");
   http.end();
 
   delay(60000);
