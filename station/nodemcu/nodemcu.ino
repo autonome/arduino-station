@@ -12,6 +12,9 @@ const String REST_API = "http://" + SERVER_ADDRESS + ":" + SERVER_PORT + "/trigg
 unsigned int pm10 = 0;
 unsigned int pm25 = 0;
 unsigned int pm100 = 0;
+
+unsigned int interval = 5 * 60000;
+
 HTTPClient http;
 
 void setup() {
@@ -68,11 +71,18 @@ void loop() {
   while(Serial.available()) Serial.read();
   Serial.println(" }");
 
-  http.begin(REST_API);
-  http.addHeader("Content-Type", "application/json");
-  http.POST("{\"value1\": \"" + SENSOR_ID + "\", \"value2\": \"pm25\", \"value3\": \"" + String(pm25) + "\"}");
+  const String URL = REST_API + "?value1=" + SENSOR_ID + "&value2=pm25&value3=" + String(pm25);
+  Serial.println(URL);
+
+  //http.begin(REST_API);
+  http.begin(URL);
+  //http.addHeader("Content-Type", "application/json");
+  //http.POST("{\"value1\": \"" + SENSOR_ID + "\", \"value2\": \"pm25\", \"value3\": \"" + String(pm25) + "\"}");
+  http.GET();
   http.end();
 
-  delay(60000);
+  Serial.println("SENT\n");
+
+  delay(interval);
 }
 
